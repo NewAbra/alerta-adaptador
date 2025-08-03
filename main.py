@@ -5,25 +5,28 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
-def alerta():
-    numero = "+553182838771"
-    apikey = "4706004"
-    mensagem = "🚨 Alerta de acesso ao site (GET)"
-    texto = urllib.parse.quote(mensagem)
+WHATSAPP_PHONE = '+553182838771'
+API_KEY = '4706004'
 
-    url = f"https://api.callmebot.com/whatsapp.php?phone={numero}&text={texto}&apikey={apikey}"
+@app.route('/', methods=['POST'])
+def webhook():
+    dados = request.get_json()
 
-    try:
-        print(f"📤 Enviando requisição para: {url}")
-        r = requests.get(url)
-        print(f"✅ Status: {r.status_code}")
-        print(f"📨 Resposta: {r.text}")
-        return '🔔 Notificação enviada com sucesso!', 200
-    except Exception as e:
-        print(f"❌ Erro ao enviar mensagem: {str(e)}")
-        return f"Erro: {str(e)}", 500
+    for item in dados.get('itens', []):
+        descricao = item.get('descricao', '').lower()
+        if descricao.startswith('adaptador'):
+            mensagem = "🔔 Nova venda detectada de ADAPTADOR! Já prepara a separação, gostoso 😘"
+            texto = urllib.parse.quote(mensagem)
+            url = f"https://api.callmebot.com/whatsapp.php?phone={WHATSAPP_PHONE}&text={texto}&apikey={API_KEY}"
+            requests.get(url)
+            break
+
+    return 'ok', 200
+
+@app.route('/', methods=['GET'])
+def status():
+    return 'Servidor rodando', 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # 👈 ESSA LINHA É A CHAVE DO RENDER
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
