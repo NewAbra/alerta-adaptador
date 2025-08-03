@@ -4,7 +4,7 @@ import urllib.parse
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def alerta():
     numero = "+553182838771"
     apikey = "4706004"
