@@ -15,7 +15,7 @@ def webhook():
     for item in dados.get('itens', []):
         descricao = item.get('descricao', '').lower()
         if descricao.startswith('adaptador'):
-            mensagem = "🔔 Nova venda detectada de ADAPTADOR! Já prepara a separação, gostoso 😘"
+           mensagem = "📦 Venda confirmada de adaptador!\nPode separar o produto, pedido já está em andamento. ✅"
             texto = urllib.parse.quote(mensagem)
             url = f"https://api.callmebot.com/whatsapp.php?phone={WHATSAPP_PHONE}&text={texto}&apikey={API_KEY}"
             requests.get(url)
