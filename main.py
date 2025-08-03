@@ -1,6 +1,7 @@
 from flask import Flask, request
 import requests
 import urllib.parse
+import os
 
 app = Flask(__name__)
 
@@ -22,3 +23,7 @@ def alerta():
     except Exception as e:
         print(f"❌ Erro ao enviar mensagem: {str(e)}")
         return f"Erro: {str(e)}", 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))  # 👈 ESSA LINHA É A CHAVE DO RENDER
+    app.run(host='0.0.0.0', port=port)
